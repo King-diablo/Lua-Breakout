@@ -1,0 +1,36 @@
+# Lua
+*.luac
+luac.out
+
+# Build artifacts
+/build/
+/dist/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.vim/
+
+# OS-specific
+Thumbs.db
+.DS_Store
+
+# Dependencies
+/lua_modules/
+/luarocks/
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
