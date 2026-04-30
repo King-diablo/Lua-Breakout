@@ -2,8 +2,11 @@ Class = require "lib.class"
 push = require 'lib.push'
 
 require "src.constants"
+require "src.paddle"
+require "src.Util"
 
 require "src.stateMachine"
 
 require "src.states.Base"
 require "src.states.Start"
+require "src.states.play"
