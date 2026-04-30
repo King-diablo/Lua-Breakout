@@ -4,6 +4,8 @@ push = require 'lib.push'
 require "src.constants"
 require "src.paddle"
 require "src.ball"
+require "src.levelMaker"
+require "src.brick"
 require "src.Util"
 
 require "src.stateMachine"
