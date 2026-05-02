@@ -1,6 +1,6 @@
 paddle = Class {}
 
-function paddle:init()
+function paddle:init(skin)
     self.x = VIRTUAL_WIDTH / 2 - 32
 
     self.y = VIRTUAL_HEIGHT - 32
@@ -10,7 +10,7 @@ function paddle:init()
     self.width = 64
     self.height = 16
 
-    self.skin = 1
+    self.skin = skin
 
     self.size = 2
 end
@@ -32,7 +32,6 @@ function paddle:update(dt)
 end
 
 function paddle:render()
-    love.graphics.draw(gTextures["main"], gFrames["paddles"][self.size + 4 * (self.skin - 1)],
-        self.x, self.y
-    )
+    love.graphics.draw(gTextures['main'], gFrames['paddles'][self.size + 4 * (self.skin - 1)],
+        self.x, self.y)
 end

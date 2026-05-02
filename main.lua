@@ -27,6 +27,7 @@ function love.load()
         ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
         ['balls'] = GenerateQuadsBalls(gTextures['main']),
         ['bricks'] = GenerateQuadsBricks(gTextures['main']),
+        ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9),
     }
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
@@ -56,7 +57,9 @@ function love.load()
 
     gStateMachine = stateMachine {
         ['start'] = function() return start() end,
-        ['play'] = function() return Play() end
+        ['play'] = function() return Play() end,
+        ['serve'] = function() return serve() end,
+        ['game-over'] = function() return gameOver() end,
     }
     gStateMachine:change('start')
 
@@ -124,4 +127,23 @@ function displayFPS()
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 5, 5)
     love.graphics.setColor(1, 1, 1, 1)
+end
+
+function renderHealth(health)
+    local healthX = VIRTUAL_WIDTH - 100
+    for i = 1, health do
+        love.graphics.draw(gTextures["hearts"], gFrames["hearts"][1], healthX, 4)
+        healthX = healthX + 11
+    end
+
+    for i = 1, 3 - health do
+        love.graphics.draw(gTextures["hearts"], gFrames["hearts"][2], healthX, 4)
+        healthX = healthX + 11
+    end
+end
+
+function renderScore(score)
+    love.graphics.setFont(gFont["small"])
+    love.graphics.print("Score:", VIRTUAL_WIDTH - 60, 5)
+    love.graphics.printf(tostring(score), VIRTUAL_WIDTH - 50, 5, 40, 'right')
 end
