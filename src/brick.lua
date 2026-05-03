@@ -1,3 +1,4 @@
+---@class brick
 brick = Class {}
 
 function brick:init(x, y)
@@ -13,8 +14,22 @@ function brick:init(x, y)
 end
 
 function brick:hit()
+    gSound["brick-hit-2"]:stop()
     gSound["brick-hit-2"]:play()
-    self.inPlay = false
+    if self.tier > 0 then
+        if self.color == 1 then
+            self.tier = self.tier - 1
+            self.color = 5
+        else
+            self.color = self.color - 1
+        end
+    else
+        if self.color == 1 then
+            self.inPlay = false
+        else
+            self.color = self.color - 1
+        end
+    end
 end
 
 function brick:render()
