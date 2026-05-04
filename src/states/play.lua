@@ -6,10 +6,10 @@ function Play:enter(params)
     self.health = params.health
     self.score = params.score
     self.ball = params.ball
+    self.level = params.level
 
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
-    self.level = params.level
 end
 function Play:update(dt)
     if self.paused then
@@ -104,6 +104,7 @@ function Play:update(dt)
                 bricks = self.bricks,
                 health = self.health,
                 score = self.score,
+                level = self.level
             })
         end
     end
