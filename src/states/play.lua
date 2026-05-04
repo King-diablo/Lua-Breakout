@@ -9,6 +9,7 @@ function Play:enter(params)
 
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
+    self.level = params.level
 end
 function Play:update(dt)
     if self.paused then
@@ -52,7 +53,18 @@ function Play:update(dt)
         if brick.inPlay and self.ball:collides(brick) then
             self.score = self.score + (brick.tier * 200 + brick.color * 25)
             brick:hit()
-            
+
+            if self:checkVictory() then
+                gSound["victory"]:play()
+
+                gStateMachine:change("victory", {
+                    level = self.level,
+                    paddle = self.paddle,
+                    health = self.health,
+                    score = self.score,
+                    ball = self.ball
+                })
+            end
             local BALL_RADIUS = 4
             local BRICK_W, BRICK_H = brick.width, brick.height
 
@@ -122,4 +134,13 @@ function Play:render()
         love.graphics.setFont(gFont['large'])
         love.graphics.printf("PAUSED", 0, VIRTUAL_HEIGHT / 2 - 16, VIRTUAL_WIDTH, 'center')
     end
+end
+
+function Play:checkVictory()
+    for key, brick in pairs(self.bricks) do
+        if brick.inPlay then
+            return false
+        end
+    end
+    return true
 end

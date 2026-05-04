@@ -5,6 +5,7 @@ function serve:enter(params)
     self.bricks = params.bricks
     self.health = params.health
     self.score = params.score
+    self.level = params.level
 
     self.ball = Ball()
     self.ball.skin = math.random(7)
@@ -21,7 +22,8 @@ function serve:update(dt)
             bricks = self.bricks,
             health = self.health,
             score = self.score,
-            ball = self.ball
+            ball = self.ball,
+            level = self.level
         })
     end
 
