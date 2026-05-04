@@ -2,6 +2,9 @@ start = Class { __includes = base }
 
 local highlighted = 1
 
+function start:enter(params)
+    self.highScores = params.highScores
+end
 function start:update(dt)
     -- toggle highlighted option if we press an arrow key up or down
     if love.keyboard.wasPressed('up') or love.keyboard.wasPressed('down') then
@@ -15,12 +18,18 @@ function start:update(dt)
         if highlighted == 1 then
             gStateMachine:change('serve', {
                 paddle = paddle(1),
+                highScores = self.highScores,
                 bricks = levelMaker.createMap(1),
                 health = 3,
                 score = 0,
-                level = 1
+                level = 1,
+            })
+        else
+            gStateMachine:change('high-scores', {
+                highScores = self.highScores
             })
         end
+        
     end
     -- we no longer have this globally, so include here
     if love.keyboard.wasPressed('escape') then

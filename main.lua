@@ -61,8 +61,12 @@ function love.load()
         ['serve'] = function() return serve() end,
         ['game-over'] = function() return gameOver() end,
         ['victory'] = function() return victory() end,
+        ['enter-high-score'] = function() return enterHighScore() end,
+        ['high-scores'] = function() return highScore() end,
     }
-    gStateMachine:change('start')
+    gStateMachine:change('start', {
+        highScores = loadHighScores()
+    })
 
 
     love.keyboard.keysPressed = {}
@@ -147,4 +151,48 @@ function renderScore(score)
     love.graphics.setFont(gFont["small"])
     love.graphics.print("Score:", VIRTUAL_WIDTH - 60, 5)
     love.graphics.printf(tostring(score), VIRTUAL_WIDTH - 50, 5, 40, 'right')
+end
+
+function loadHighScores()
+    love.filesystem.setIdentity("breakout")
+
+    if not love.filesystem.getInfo("breakout.lst") then
+        local score = ""
+        for i = 10, 1, -1 do
+            score = score .. "CTO\n"
+            score = score .. tostring(1 * 1000) .. "\n"
+        end
+
+        love.filesystem.write("breakout.lst", score)
+    end
+
+    local name = true
+    local currentName = nil
+    local counter = 1
+
+    -- initialize scores table with at least 10 blank entries
+    local scores = {}
+
+    for i = 1, 10 do
+        -- blank table; each will hold a name and a score
+        scores[i] = {
+            name = nil,
+            score = nil
+        }
+    end
+
+    -- iterate over each line in the file, filling in names and scores
+    for line in love.filesystem.lines('breakout.lst') do
+        if name then
+            scores[counter].name = string.sub(line, 1, 3)
+        else
+            scores[counter].score = tonumber(line)
+            counter = counter + 1
+        end
+
+        -- flip the name flag
+        name = not name
+    end
+
+    return scores
 end
