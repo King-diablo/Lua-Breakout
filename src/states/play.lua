@@ -11,6 +11,7 @@ function Play:enter(params)
 
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
+    self.powerUps = {}
 end
 function Play:update(dt)
     if self.paused then
@@ -53,6 +54,7 @@ function Play:update(dt)
     for k, brick in pairs(self.bricks) do
         if brick.inPlay and self.ball:collides(brick) then
             self.score = self.score + (brick.tier * 200 + brick.color * 25)
+
             brick:hit()
 
             if self:checkVictory() then
@@ -88,6 +90,10 @@ function Play:update(dt)
             end
 
             self.ball.dy = self.ball.dy * 1.02
+            if self.health < 3 and not brick.inPlay then
+                local healthPickUp = health(brick)
+                table.insert(self.powerUps, healthPickUp)
+            end
             break
         end
     end
@@ -116,6 +122,23 @@ function Play:update(dt)
     for k, brick in pairs(self.bricks) do
         brick:update(dt)
     end
+    for k, powerUps in pairs(self.powerUps) do
+        powerUps:update(dt)
+
+        if powerUps:collides(self.paddle) then
+            powerUps:destroy()
+            table.remove(self.powerUps, k)
+            self.health = self.health + 1
+            if self.health > 3 then
+                self.health = 3
+            end
+        end
+
+        if powerUps.y >= VIRTUAL_HEIGHT then
+            powerUps:destroy()
+            table.remove(self.powerUps, k)
+        end
+    end
     if love.keyboard.wasPressed('escape') then
         love.event.quit()
     end
@@ -128,6 +151,9 @@ function Play:render()
     end
     for k, brick in pairs(self.bricks) do
         brick:renderParticles()
+    end
+    for key, powerUps in pairs(self.powerUps) do
+        powerUps:render()
     end
     self.paddle:render()
     self.ball:render()

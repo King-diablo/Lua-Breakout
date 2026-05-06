@@ -19,3 +19,5 @@ require "src.states.victory"
 require "src.states.highscore"
 require "src.states.enterHighScore"
 require "src.states.paddleSelect"
+
+require "src.powerUp.health"
