@@ -1,24 +1,33 @@
 health = Class {}
 
 local fallSpeed = 100
-function health:init(brick)
-    self.x = brick.x
-    self.y = brick.y
+function health:init(x, y)
+    self.x = x
+    self.y = y
     self.isActive = true
     self.paddle = paddle
-    self.brick = brick
     self.width = 10
     self.height = 10
+    self.skin = 3
 end
+
 
 function health:update(dt)
     local dy = fallSpeed * dt
     self.y = self.y + dy
 end
 
+function health:reset(x, y)
+    self.x = x
+    self.y = y
+    self.isActive = true
+end
 function health:render()
     if self.isActive then
-        love.graphics.rectangle("fill", self.x, self.y, self.width, self.height);
+        love.graphics.draw(gTextures['main'],
+            gFrames['powerUp'][self.skin],
+            self.x, self.y)
+        -- love.graphics.rectangle("fill", self.x, self.y, self.width, self.height);
     end
 end
 

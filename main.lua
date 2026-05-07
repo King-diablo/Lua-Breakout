@@ -28,6 +28,7 @@ function love.load()
         ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
         ['balls'] = GenerateQuadsBalls(gTextures['main']),
         ['bricks'] = GenerateQuadsBricks(gTextures['main']),
+        ['powerUp'] = GenerateQuadsPowerUp(gTextures['main']),
         ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9),
     }
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, {

@@ -11,7 +11,7 @@ function Play:enter(params)
 
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
-    self.powerUps = {}
+    self.powerUps = nil
 end
 function Play:update(dt)
     if self.paused then
@@ -90,9 +90,18 @@ function Play:update(dt)
             end
 
             self.ball.dy = self.ball.dy * 1.02
+            -- spawn healthPickUp
             if self.health < 3 and not brick.inPlay then
-                local healthPickUp = health(brick)
-                table.insert(self.powerUps, healthPickUp)
+                -- create a new pickup object
+                if not self.powerUps then
+                    local healthPickUp = health(brick.x, brick.y)
+                    self.powerUps = healthPickUp
+                end
+
+                -- reuse it
+                if self.powerUps and not self.powerUps.isActive then
+                    self.powerUps:reset(brick.x, brick.y)
+                end
             end
             break
         end
@@ -122,21 +131,20 @@ function Play:update(dt)
     for k, brick in pairs(self.bricks) do
         brick:update(dt)
     end
-    for k, powerUps in pairs(self.powerUps) do
-        powerUps:update(dt)
+    -- use pickup
+    if self.powerUps and self.powerUps.isActive then
+        self.powerUps:update(dt)
 
-        if powerUps:collides(self.paddle) then
-            powerUps:destroy()
-            table.remove(self.powerUps, k)
-            self.health = self.health + 1
-            if self.health > 3 then
-                self.health = 3
+        if self.powerUps:collides(self.paddle) then
+            self.powerUps:destroy()
+            if self.health < 3 then
+                self.health = self.health + 1
+                return
             end
         end
 
-        if powerUps.y >= VIRTUAL_HEIGHT then
-            powerUps:destroy()
-            table.remove(self.powerUps, k)
+        if self.powerUps.y >= VIRTUAL_HEIGHT then
+            self.powerUps:destroy()
         end
     end
     if love.keyboard.wasPressed('escape') then
@@ -152,8 +160,8 @@ function Play:render()
     for k, brick in pairs(self.bricks) do
         brick:renderParticles()
     end
-    for key, powerUps in pairs(self.powerUps) do
-        powerUps:render()
+    if self.powerUps then
+        self.powerUps:render()
     end
     self.paddle:render()
     self.ball:render()
